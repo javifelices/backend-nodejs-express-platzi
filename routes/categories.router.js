@@ -1,29 +1,21 @@
 const express = require('express');
-const faker = require('faker');
+
+const CategoriesService = require('./../services/category.service');
 
 const router = express.Router();
-
-faker.locale = 'es';
+const service = new CategoriesService();
 
 router.get('/', (req, res) => {
-  const categories = [];
-  const { limit } = req.query;
-  for (let index = 0; index < (limit || 10); index++) {
-    categories.push({
-      category: faker.commerce.productAdjective(),
-      description: faker.hacker.phrase()
-    });
-  }
+  let { limit } = req.query;
+  limit = limit || 100;
+  const categories = service.find(limit);
   res.json(categories);
 });
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
-    id,
-    category: faker.commerce.productAdjective(),
-    description: faker.hacker.phrase()
-  });
+  const category = service.findOne(id);
+  res.json(category);
 });
 
 // router.get('/:categoryId/products/:productId', (req, res) => {
