@@ -6,9 +6,7 @@ const router = express.Router();
 const service = new ProductsService();
 
 router.get('/', (req, res) => {
-  let { limit } = req.query;
-  limit = limit || 100;
-  const products = service.find(limit);
+  const products = service.find();
   res.json(products);
 });
 
@@ -25,10 +23,8 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const body = req.body;
-  res.status(201).json({
-    message: 'product created',
-    data: body
-  });
+  const newProduct = service.create(body);
+  res.status(201).json(newProduct);
 });
 
 // router.put('/:id', (req, res) => {
@@ -44,19 +40,14 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
   const { id } = req.params;
   const body = req.body;
-  res.json({
-    message: 'product update',
-    data: body,
-    id
-  });
+  const product = service.update(id, body);
+  res.json(product);
 });
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
-    message: 'product deleted',
-    id
-  });
+  const rta = service.delete(id);
+  res.json(rta);
 });
 
 module.exports = router;
